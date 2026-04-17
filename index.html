@@ -52,6 +52,7 @@
 </div>
 
 <script>
+    // ▼ここはこのままでOKです
     const LIFF_ID = "2009817385-L8mRsQQ7";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx5XSNNWpjGjMtqdr4yput0B_pipzfbb4Hkl0TcpQHAEbdL2isZZaVJ9C5iqQlbyyYr/exec";
     let lineUserId = "";
@@ -99,7 +100,7 @@
             loading.style.display = 'none';
             form.style.display = 'none';
             successMessage.style.display = 'block';
-            // 3秒後に自動でLINE画面を閉じる設定（必要に応じて）
+            // 3秒後に自動でLINE画面を閉じる
             setTimeout(() => { liff.closeWindow(); }, 3000);
         })
         .catch(error => {
