@@ -1,58 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ご意見・ご要望Box | ピンクバナナ</title>
-    <style>
-        body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; background-color: #fffafb; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; background: #fff; padding: 25px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3); border: 1px solid #ffb6c1; }
-        h2 { color: #ff1493; text-align: center; margin-top: 0; font-size: 20px; border-bottom: 2px dashed #ffb6c1; padding-bottom: 15px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #555; }
-        .required { color: #fff; background: #ff4d4d; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
-        input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; background: #fdfdfd; }
-        textarea { resize: vertical; height: 120px; }
-        input:focus, textarea:focus { border-color: #ff69b4; outline: none; background: #fff; }
-        .submit-btn { width: 100%; background: #06C755; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 0 #048b3b; }
-        .submit-btn:disabled { background: #ccc; box-shadow: 0 4px 0 #999; cursor: not-allowed; }
-        #loading { display: none; text-align: center; color: #666; font-size: 14px; margin-top: 15px; }
-        #success-message { display: none; text-align: center; color: #05A546; font-weight: bold; font-size: 16px; padding: 20px; background: #e6f9ec; border-radius: 10px; margin-top: 20px; }
-    </style>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-</head>
-<body>
-
-<div class="container">
-    <h2>📩 ご意見・ご要望Box</h2>
-    <p style="font-size: 13px; color: #666; line-height: 1.6; text-align: center; margin-bottom: 25px;">
-        皆様の貴重なご意見をお聞かせください。<br>ワンオペ店長が直接確認し、誠実に対応いたします。
-    </p>
-
-    <form id="feedbackForm">
-        <div class="form-group">
-            <label>お名前（LINE名を取得）</label>
-            <input type="text" id="name" name="name" readonly>
-        </div>
-        <div class="form-group">
-            <label>メールアドレス <span class="required">必須</span></label>
-            <input type="email" id="email" name="email" placeholder="返信用のメールアドレス" required>
-        </div>
-        <div class="form-group">
-            <label>ご意見内容 <span class="required">必須</span></label>
-            <textarea id="message" name="message" placeholder="サービスに関するご意見、ご要望などをご自由にお書きください。" required></textarea>
-        </div>
-        <button type="submit" class="submit-btn" id="submitBtn">送信する</button>
-    </form>
-
-    <div id="loading">送信中...しばらくお待ちください。</div>
-    <div id="success-message">
-        ご意見ありがとうございます！<br>送信が完了しました。<br>LINEに通知をお送りしましたのでご確認ください。
-    </div>
-</div>
-
 <script>
-    // ▼ここはこのままでOKです
     const LIFF_ID = "2009817385-L8mRsQQ7";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx5XSNNWpjGjMtqdr4yput0B_pipzfbb4Hkl0TcpQHAEbdL2isZZaVJ9C5iqQlbyyYr/exec";
     let lineUserId = "";
@@ -92,15 +38,19 @@
             lineUserId: lineUserId
         };
 
+        // ▼ ここに魔法の2行（modeとheaders）を追加しました！ ▼
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
+            mode: 'no-cors', // セキュリティエラーを回避する魔法のコード
+            headers: {
+                'Content-Type': 'text/plain' // 通信をシンプルにして警戒されないようにする
+            },
             body: JSON.stringify(data)
         })
         .then(() => {
             loading.style.display = 'none';
             form.style.display = 'none';
             successMessage.style.display = 'block';
-            // 3秒後に自動でLINE画面を閉じる
             setTimeout(() => { liff.closeWindow(); }, 3000);
         })
         .catch(error => {
@@ -111,6 +61,3 @@
         });
     });
 </script>
-
-</body>
-</html>
