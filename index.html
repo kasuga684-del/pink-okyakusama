@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ご意見・ご要望Box | ピンクバナナ</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #fffafb; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #fff; padding: 25px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3); border: 1px solid #ffb6c1; }
+        h2 { color: #ff1493; text-align: center; margin-top: 0; font-size: 20px; border-bottom: 2px dashed #ffb6c1; padding-bottom: 15px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #555; }
+        .required { color: #fff; background: #ff4d4d; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; background: #fdfdfd; }
+        textarea { resize: vertical; height: 120px; }
+        input:focus, textarea:focus { border-color: #ff69b4; outline: none; background: #fff; }
+        .submit-btn { width: 100%; background: #06C755; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 0 #048b3b; }
+        .submit-btn:active { transform: translateY(4px); box-shadow: none; }
+        .submit-btn:disabled { background: #ccc; box-shadow: 0 4px 0 #999; cursor: not-allowed; }
+        #loading { display: none; text-align: center; color: #666; font-size: 14px; margin-top: 15px; }
+        #success-message { display: none; text-align: center; color: #05A546; font-weight: bold; font-size: 16px; padding: 20px; background: #e6f9ec; border-radius: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📩 ご意見・ご要望Box</h2>
+    <p style="font-size: 13px; color: #666; line-height: 1.6; text-align: center; margin-bottom: 25px;">
+        皆様の貴重なご意見をお聞かせください。<br>ワンオペ店長が直接確認いたします！
+    </p>
+
+    <form id="feedbackForm">
+        <div class="form-group">
+            <label>お名前（匿名可）</label>
+            <input type="text" id="name" name="name" placeholder="例：匿名希望">
+        </div>
+        <div class="form-group">
+            <label>メールアドレス <span class="required">必須</span></label>
+            <input type="email" id="email" name="email" placeholder="返信用のメールアドレス" required>
+        </div>
+        <div class="form-group">
+            <label>ご意見内容 <span class="required">必須</span></label>
+            <textarea id="message" name="message" placeholder="サービスに関するご意見、ご要望、お問い合わせなどをご自由にお書きください。" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">送信する</button>
+    </form>
+
+    <div id="loading">送信中...しばらくお待ちください。</div>
+    <div id="success-message">
+        ご意見ありがとうございます！<br>送信が完了しました。<br>確認後、メールにて返信させていただきます。
+    </div>
+</div>
+
+<script>
+    // ※後ほど取得するGASのWebアプリURLをここに貼り付けます
+    const GAS_WEB_APP_URL = "ここにGASのURLを貼り付けます";
+
+    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const successMessage = document.getElementById('success-message');
+        const form = document.getElementById('feedbackForm');
+
+        // ボタン無効化＆ローディング表示
+        btn.disabled = true;
+        btn.style.display = 'none';
+        loading.style.display = 'block';
+
+        const data = {
+            name: document.getElementById('name').value || '匿名希望',
+            email: document.getElementById('email').value,
+            message: document.getElementById('message').value
+        };
+
+        fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            loading.style.display = 'none';
+            form.style.display = 'none';
+            successMessage.style.display = 'block';
+        })
+        .catch(error => {
+            alert('送信に失敗しました。時間をおいて再度お試しください。');
+            btn.disabled = false;
+            btn.style.display = 'block';
+            loading.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
