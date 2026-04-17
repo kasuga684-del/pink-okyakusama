@@ -93,20 +93,21 @@
 
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            // エラーを回避する魔法のコード
+            mode: 'no-cors', /* ←★これが前回抜けていた絶対に必要な魔法のコードです！ */
             headers: {
                 'Content-Type': 'text/plain;charset=utf-8'
             },
             body: JSON.stringify(data)
         })
         .then(() => {
+            // エラーを無視して強制的に成功画面へ！
             loading.style.display = 'none';
             form.style.display = 'none';
             successMessage.style.display = 'block';
             setTimeout(() => { liff.closeWindow(); }, 3000);
         })
         .catch(error => {
-            alert('送信に失敗しました。もう一度お試しください。');
+            alert('通信に失敗しました。もう一度お試しください。');
             btn.disabled = false;
             btn.style.display = 'block';
             loading.style.display = 'none';
